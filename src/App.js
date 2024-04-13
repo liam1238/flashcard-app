@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { FlashCardList, Form } from './components/index';
+import './style/App.css';
+import axios from 'axios';
+
 
 function App() {
+  const [flashcards, setFlashcards] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const categoryEl = useRef();
+  const amonutEl = useRef();
+
+  useEffect(() => {
+    axios
+      .get('https://opentdb.com/api_category.php')
+      .then(res => {
+        setCategories(res.data.trivia_categories);
+      })
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Form categoryEl={categoryEl} categories={categories} amonutEl={amonutEl} setFlashcards={setFlashcards}/>
+      <div className='container'>
+        <FlashCardList flashcards={flashcards}/>
+      </div>
+    </>
   );
 }
 
